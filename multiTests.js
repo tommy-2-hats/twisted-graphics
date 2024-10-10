@@ -16,32 +16,34 @@ import * as PIXI from 'pixi.js';
 
     app.stage.addChild(container);
 
-    // Load the bunny texture
+    // Load the myLogo texture
     const texture = await PIXI.Assets.load('/assets/favicon.png');
 
     // Create a 5x5 grid of bunnies in the container
-    for (let i = 0; i < 25; i++)
+    for (let i = 0; i < 6; i++)
     {
-        const bunny = new PIXI.Sprite(texture);
+        const myLogo = new PIXI.Sprite(texture);
 
-        bunny.x = (i % 5) * 40;
-        bunny.y = Math.floor(i / 5) * 40;
-        container.addChild(bunny);
+        myLogo.x = (i % 6) * 40;
+        // myLogo.y = Math.floor(i / 5) * 40;
+        container.addChild(myLogo);
     }
 
     // Move the container to the center
     container.x = app.screen.width / 2;
-    container.y = app.screen.height / 2;
+    container.y = container.height * 3;
 
-    // Center the bunny sprites in local container coordinates
+    // Center the myLogo sprites in local container coordinates
     container.pivot.x = container.width / 2;
     container.pivot.y = container.height / 2;
 
+    container.scale.set(5);
+    // container.width = parent.width;
     // Listen for animate update
-    app.ticker.add((time) =>
-    {
-        // Continuously rotate the container!
-        // * use delta to create frame-independent transform *
-        container.rotation -= 0.01 * time.deltaTime;
-    });
+    // app.ticker.add((time) =>
+    // {
+    //     // Continuously rotate the container!
+    //     // * use delta to create frame-independent transform *
+    //     container.rotation -= 0.01 * time.deltaTime;
+    // });
 })();
