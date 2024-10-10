@@ -1,48 +1,101 @@
 import * as PIXI from 'pixi.js';
+import { Assets } from 'pixi.js';
 
-// Create a new PIXI application
+// Create the outer div
+const outerDiv = document.createElement('div');
+outerDiv.style.position = 'fixed';
+outerDiv.style.top = '0';
+outerDiv.style.left = '50%';
+outerDiv.style.transform = 'translateX(-50%)';
+outerDiv.style.maxWidth = '1440px';
+outerDiv.style.width = '100%';
+outerDiv.style.height = 'auto';
+outerDiv.style.display = 'flex';
+outerDiv.style.justifyContent = 'center';
+outerDiv.style.alignItems = 'center';
+
+// Create the main-menu div
+const mainMenu = document.createElement('div');
+mainMenu.id = 'main-menu';
+
+// Set the CSS for auto layout with Flexbox
+mainMenu.style.display = 'flex';
+mainMenu.style.justifyContent = 'space-between';
+mainMenu.style.padding = '0';
+mainMenu.style.margin = '0';
+mainMenu.style.width = '100%';
+
+// Create the canvas element
+const canvas = document.createElement('canvas');
+canvas.id = 'menuCanvas';
+mainMenu.appendChild(canvas);
+
+// Append the main-menu div to the outer div
+outerDiv.appendChild(mainMenu);
+
+// Append the outer div to the document body
+document.body.appendChild(outerDiv);
+
+// Initialize PIXI Application
 const app = new PIXI.Application();
+app.init({ view: canvas, resizeTo: window });
 
-// Initialize the app with a width and height
-await app.init({ width: 640, height: 360 });
+// Load SVG images
+const svgPaths = [
+    'assets/main-menu/swirl.svg',
+    'assets/main-menu/us.svg',
+    'assets/main-menu/tiger.svg',
+    'assets/main-menu/logos.svg',
+    'assets/main-menu/eyes.svg',
+    'assets/main-menu/me.svg'
+];
 
-// Add the canvas to the document body
-document.body.appendChild(app.canvas);
+const loadSVGs = async () => {
+    try {
+        const textures = await Promise.all(svgPaths.map(path => Assets.load(path)));
+        const container = new PIXI.Container();
+        app.stage.addChild(container);
 
-// load the PNG asynchronously
-await PIXI.Assets.load('/assets/tiger.svg');
-let sprite = PIXI.Sprite.from('/assets/tiger.svg');
+        textures.forEach((texture, index) => {
+            const sprite = new PIXI.Sprite(texture);
+            sprite.width = app.screen.width / 6;
+            sprite.height = sprite.width * (texture.height / texture.width);
+            sprite.x = index * sprite.width;
+            sprite.interactive = true;
+            sprite.buttonMode = true;
 
-// Add the sprite to the stage
-app.stage.addChild(sprite);
+            // Placeholder event listeners
+            sprite.on('pointerover', () => {
+                console.log(`Mouse entered ${svgPaths[index]}`);
+            });
+            sprite.on('pointerout', () => {
+                console.log(`Mouse left ${svgPaths[index]}`);
+            });
+            sprite.on('pointerdown', () => {
+                console.log(`Mouse clicked ${svgPaths[index]}`);
+            });
 
-// Create a Graphics object, draw a rectangle and fill it
-let obj = new PIXI.Graphics()
-  .rect(10, 10, 200, 100)
-  .fill(0xffff00);
+            container.addChild(sprite);
+        });
 
-// Add it to the stage to render
-app.stage.addChild(obj)
+        // Adjust container height based on the tallest sprite
+        const maxHeight = Math.max(...container.children.map(child => child.height));
+        app.renderer.resize(app.screen.width, maxHeight);
+    } catch (error) {
+        console.error('Error loading SVGs:', error);
+    }
+};
 
+loadSVGs();
 
-//----------------------------------
-//-----  Create Annimation  -------- Hell yeah baby!
-//----------------------------------
-
-// Add a variable to count up the seconds our demo has been running
-// let elapsed = 0.0;
-// Tell our application's ticker to run a new callback every frame, passing
-// in the amount of time that has passed since the last tick
-
-// // Start the ticker
-// app.ticker.add();
-
-// app.ticker.add((ticker) => {
-//   // Add the time to our total elapsed time
-//   elapsed += ticker.deltaTime;
-//   // Update the sprite's X position based on the cosine of our elapsed time.  We divide
-//   // by 50 to slow the animation down a bit...
-//   sprite.x = 100.0 + Math.cos(elapsed / 50.0) * 100.0;
-// });
+// Handle window resize
+window.addEventListener('resize', () => {
+    app.renderer.resize(window.innerWidth, app.renderer.height);
+    app.stage.children[0].children.forEach((sprite, index) => {
+        sprite.width = app.screen.width / 6;
+        sprite.height = sprite.width * (sprite.texture.height / sprite.texture.width);
+        sprite.x = index * sprite.width;
+    });
+});
 
 

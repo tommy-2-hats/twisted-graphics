@@ -94,6 +94,23 @@ canvas [resize] {
 display: flex;
 
 }
+#menuNav {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 1440px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#menuCanvas {
+  width: 100%;
+  height: auto;
+}
 
 button {
   border-radius: 8px;
