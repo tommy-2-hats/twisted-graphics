@@ -60,7 +60,6 @@ label {
 caption {
   font-size: .65rem;
 }
-
 a {
   font-weight: 500;
   color: #646cff;
@@ -94,6 +93,7 @@ canvas [resize] {
 display: flex;
 
 }
+
 #menuNav {
   position: fixed;
   top: 0;
@@ -106,7 +106,13 @@ display: flex;
   justify-content: center;
   align-items: center;
 }
-
+#main-menu {
+  display: flex;
+  justify-content: space-between;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
 #menuCanvas {
   width: 100%;
   height: auto;

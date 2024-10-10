@@ -1,40 +1,24 @@
 import * as PIXI from 'pixi.js';
 import { Assets } from 'pixi.js';
 
-// Create the outer div
-const outerDiv = document.createElement('div');
-outerDiv.style.position = 'fixed';
-outerDiv.style.top = '0';
-outerDiv.style.left = '50%';
-outerDiv.style.transform = 'translateX(-50%)';
-outerDiv.style.maxWidth = '1440px';
-outerDiv.style.width = '100%';
-outerDiv.style.height = 'auto';
-outerDiv.style.display = 'flex';
-outerDiv.style.justifyContent = 'center';
-outerDiv.style.alignItems = 'center';
+// Create the outer nav element
+const outerNav = document.createElement('nav');
+outerNav.id = 'menuNav';
 
 // Create the main-menu div
 const mainMenu = document.createElement('div');
 mainMenu.id = 'main-menu';
-
-// Set the CSS for auto layout with Flexbox
-mainMenu.style.display = 'flex';
-mainMenu.style.justifyContent = 'space-between';
-mainMenu.style.padding = '0';
-mainMenu.style.margin = '0';
-mainMenu.style.width = '100%';
 
 // Create the canvas element
 const canvas = document.createElement('canvas');
 canvas.id = 'menuCanvas';
 mainMenu.appendChild(canvas);
 
-// Append the main-menu div to the outer div
-outerDiv.appendChild(mainMenu);
+// Append the main-menu div to the outer nav
+outerNav.appendChild(mainMenu);
 
-// Append the outer div to the document body
-document.body.appendChild(outerDiv);
+// Append the outer nav to the document body
+document.body.appendChild(outerNav);
 
 // Initialize PIXI Application
 const app = new PIXI.Application();
