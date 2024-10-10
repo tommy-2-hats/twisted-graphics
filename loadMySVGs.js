@@ -9,7 +9,7 @@ import * as PIXI from 'pixi.js';
 
     // Append the application canvas to the document body
     document.body.appendChild(app.canvas);
-
+// 
     const theSvg = await PIXI.Assets.load({
         src: '/assets/main-menu/tiger.svg',
         data: {
@@ -17,20 +17,29 @@ import * as PIXI from 'pixi.js';
         },
     });
 
-    const graphics = new PIXI.Graphics(theSvg);
-
+    const graphics1 = new PIXI.Graphics(theSvg);
+    const graphics2 = new PIXI.Graphics(theSvg);
     // line it up as this svg is not centered
-    const bounds = graphics.getLocalBounds();
+    const bounds1 = graphics1.getLocalBounds();
+    const bounds2 = graphics1.getLocalBounds();
+    
+    graphics1.pivot.set((bounds1.x + bounds1.width) / 2, (bounds1.y + bounds1.height) / 2);
 
-    graphics.pivot.set((bounds.x + bounds.width) / 2, (bounds.y + bounds.height) / 2);
+    graphics2.pivot.set((bounds2.x + bounds2.width) / 2, (bounds2.y + bounds2.height) / 2);
 
-    graphics.position.set(app.screen.width / 2, app.screen.height / 2);
+    graphics1.position.set(app.screen.width / 2, app.screen.height / 2);
 
-    app.stage.addChild(graphics);
+    graphics2.position.set(app.screen.width / 2, app.screen.height / 2);
+
+    app.stage.addChild(graphics1);
+    app.stage.addChild(graphics2);
 
     app.ticker.add((time) =>
     {
-        graphics.rotation += 0.01;
-        graphics.scale.set(2 + Math.sin(graphics.rotation));
+        graphics1.rotation += 0.01;
+        graphics1.scale.set(0 + Math.sin(graphics1.rotation));
+
+        graphics2.rotation -= 0.01;
+        graphics2.scale.set(6 + Math.sin(graphics2.rotation));
     });
 })();
