@@ -10,8 +10,8 @@
   font-style: normal;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 1);
-  background-color: #000000;
+  color: rgb(39, 235, 0);
+  background-color: #555555;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -114,10 +114,10 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
+/* @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    color: #73ff00;
+    background-color: rgb(94, 94, 94);
   }
   a:hover {
     color: #747bff;
@@ -125,4 +125,4 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
+} */
