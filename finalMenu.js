@@ -1,62 +1,38 @@
-import * as PIXI from 'pixi.js';
-// Create a new PIXI application
-const app = new PIXI.Application();
-// Initialize the app with a width and height
-await app.init({ resizeTo: window, antialias: true });
-// Add the canvas to the document body
-const mainMenu = document.getElementById('mainMenu');
-mainMenu.appendChild(app.view);
+import { Application, MeshPlane, Assets } from 'pixi.js';
 
-const resizeApp = () => {
-  const width = mainMenu.clientWidth;
-  const height = mainMenu.clientHeight;
-  app.renderer.resize(width, height);
-};
+(async () => {
+  // Create a new application
+  const app = new Application();
 
-window.addEventListener('resize', resizeApp);
-resizeApp();
+  // Initialize the application
+  await app.init({ background: '#1099bb', resizeTo: window });
 
-//--------------------------------------------------
-// Function to load and position an SVG image ------
-//--------------------------------------------------
-const loadAndPositionSVG = async (path, index) => {
-    try {
-        const svg = await PIXI.Assets.load({
-          src: path,
-            data: {
-                parseAsGraphicsContext: true,
-              },
-        });
-        const graphics = new PIXI.Graphics(svg);
-        const bounds = graphics.getLocalBounds();
-        graphics.pivot.set(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
-        graphics.position.set(bounds.width / 2, bounds.height / 2);
-        graphics.position.x += (graphics.width * index);
-        app.stage.addChild(graphics);
-        // console.log({
-        //   svg,
-        //   graphics,
-        //   bounds
-        // });
-      } catch (error) {
-        console.error(`Error loading SVG ${path}:`, error);
+  // Append the application canvas to the document body
+  document.body.appendChild(app.canvas);
+
+  // Load the grass texture
+  const texture = await Assets.load('https://pixijs.com/assets/bg_grass.jpg');
+
+  // Create a simple grass plane and add it to the stage
+  const plane = new MeshPlane({ texture, verticesX: 10, verticesY: 10 });
+
+  plane.x = 100;
+  plane.y = 100;
+
+  app.stage.addChild(plane);
+
+  // Get the buffer for vertex positions.
+  const { buffer } = plane.geometry.getAttribute('aPosition');
+
+  // Listen for animate update
+  let timer = 0;
+
+  app.ticker.add(() => {
+    // Randomize the vertice positions a bit to create movement.
+    for (let i = 0; i < buffer.data.length; i++) {
+      buffer.data[i] += Math.sin(timer / 10 + i) * 0.5;
     }
-};
-
-
-//--------------------------------------------------
-// Load and position each SVG image ----------------
-//--------------------------------------------------
-const imagePaths = [
-    'assets/main-menu/swirl.svg',
-    'assets/main-menu/ux.svg',
-    'assets/main-menu/tiger.svg',
-    'assets/main-menu/logos.svg',
-    'assets/main-menu/eyes.svg',
-    'assets/main-menu/me.svg'
-  ];
-  imagePaths.forEach((path, index) => {
-    loadAndPositionSVG(path, index);
+    buffer.update();
+    timer++;
   });
-  
-  
+})();
