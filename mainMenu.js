@@ -32,14 +32,6 @@ import { Application, Assets, Graphics } from 'pixi.js';
 
         const graphic = new Graphics(svg);
 
-        // Generate a random color
-        const randomColor = Math.floor(Math.random() * 0xFFFFFF);
-
-        // Apply the color to the graphic
-        graphic.fill(randomColor);
-        graphic.rect(0, 0, graphic.width, graphic.height);
-        graphic.fill();
-
         const bounds = graphic.getLocalBounds();
         graphic.pivot.set((bounds.x + bounds.width) / 2, (bounds.y + bounds.height) / 2);
         graphic.position.set(app.screen.width / 2, app.screen.height / 2);
@@ -51,12 +43,23 @@ import { Application, Assets, Graphics } from 'pixi.js';
         graphics.push(graphic);
 
         // Generate a random rotation speed
-        const rotationSpeed = 0.01 + Math.random() * 0.005;
+        let rotationSpeed = 0.01 + Math.random() * 0.005;
+        let targetRotationSpeed = rotationSpeed;
 
         app.ticker.add((time) => {
+            // Ease into the new rotation speed
+            rotationSpeed += (targetRotationSpeed - rotationSpeed) * 0.05;
             graphic.rotation += rotationSpeed;
             graphic.scale.set(2 + Math.sin(graphic.rotation));
         });
+
+        // Function to randomize rotation direction
+        function randomizeRotationDirection() {
+            targetRotationSpeed = (Math.random() > 0.5 ? 1 : -1) * (0.01 + Math.random() * 0.005);
+        }
+
+        // Change rotation direction at random intervals
+        setInterval(randomizeRotationDirection, 2000 + Math.random() * 3000);
     }
 
     // Ensure the stage sorts children by zIndex
