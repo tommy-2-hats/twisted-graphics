@@ -20,6 +20,8 @@ import { Application, Assets, Graphics } from 'pixi.js';
         '/assets/main-menu/me.svg'
     ];
 
+    const graphics = [];
+
     for (const url of svgUrls) {
         const svg = await Assets.load({
             src: url,
@@ -42,11 +44,33 @@ import { Application, Assets, Graphics } from 'pixi.js';
         graphic.pivot.set((bounds.x + bounds.width) / 2, (bounds.y + bounds.height) / 2);
         graphic.position.set(app.screen.width / 2, app.screen.height / 2);
 
+        // Generate a random z-index
+        graphic.zIndex = Math.floor(Math.random() * 10);
+
         app.stage.addChild(graphic);
+        graphics.push(graphic);
+
+        // Generate a random rotation speed
+        const rotationSpeed = 0.01 + Math.random() * 0.005;
 
         app.ticker.add((time) => {
-            graphic.rotation += .01;
+            graphic.rotation += rotationSpeed;
             graphic.scale.set(2 + Math.sin(graphic.rotation));
         });
     }
+
+    // Ensure the stage sorts children by zIndex
+    app.stage.sortableChildren = true;
+
+    // Function to randomly change z-index of graphics
+    function randomizeZIndex() {
+        for (const graphic of graphics) {
+            graphic.zIndex = Math.floor(Math.random() * 100);
+        }
+        // Sort children by zIndex
+        app.stage.children.sort((a, b) => a.zIndex - b.zIndex);
+    }
+
+    // Change z-index every 2 seconds
+    setInterval(randomizeZIndex, 2000);
 })();
