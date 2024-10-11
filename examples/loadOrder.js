@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js';
-
 // Create the application helper and add its render target to the page
 const app = new PIXI.Application();
 await app.init({ width: 640, height: 360 })
