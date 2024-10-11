@@ -20,18 +20,3 @@ const imagePaths = [
     'assets/main-menu/me.svg'
 ];
 
-
-const images = [];
-const canvasWidth = app.renderer.width;
-const imageWidth = canvasWidth / 6;
-
-for (let i = 0; i < imagePaths.length; i++) {
-    const SVG = await PIXI.Assets.load({
-        src: imagePaths[i],
-        data: {
-            parseAsGraphicsContext: true,
-        },
-    });
-
-  
-}
