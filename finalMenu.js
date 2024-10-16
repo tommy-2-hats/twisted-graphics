@@ -1,38 +1,23 @@
-import { Application, MeshPlane, Assets } from 'pixi.js';
+import { Application, Assets, Sprite } from 'pixi.js';
 
+// Asynchronous IIFE
 (async () => {
-  // Create a new application
+  // Create a PixiJS application.
   const app = new Application();
 
-  // Initialize the application
+  // Intialize the application.
   await app.init({ background: '#1099bb', resizeTo: window });
 
-  // Append the application canvas to the document body
+  const texture = await Assets.load('https://pixijs.com/assets/bunny.png');
+  const bunny = new Sprite(texture);
+
+  app.stage.addChild(bunny);
+
+  bunny.anchor.set(0.5)
+
+  bunny.x = app.screen.width / 2
+  bunny.y = app.screen.height / 2
+
+  // Then adding the application's canvas to the DOM body.
   document.body.appendChild(app.canvas);
-
-  // Load the grass texture
-  const texture = await Assets.load('https://pixijs.com/assets/bg_grass.jpg');
-
-  // Create a simple grass plane and add it to the stage
-  const plane = new MeshPlane({ texture, verticesX: 10, verticesY: 10 });
-
-  plane.x = 100;
-  plane.y = 100;
-
-  app.stage.addChild(plane);
-
-  // Get the buffer for vertex positions.
-  const { buffer } = plane.geometry.getAttribute('aPosition');
-
-  // Listen for animate update
-  let timer = 0;
-
-  app.ticker.add(() => {
-    // Randomize the vertice positions a bit to create movement.
-    for (let i = 0; i < buffer.data.length; i++) {
-      buffer.data[i] += Math.sin(timer / 10 + i) * 0.5;
-    }
-    buffer.update();
-    timer++;
-  });
 })();
