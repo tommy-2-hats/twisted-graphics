@@ -9,36 +9,37 @@ import { Application, Assets, Graphics } from 'pixi.js';
 
   // Append the application canvas to the document body
   document.body.appendChild(app.canvas);
-  // Load the SVGs
-  const svgFilePath = [
-    'assets/main-menu/swirl.svg',
-    'assets/main-menu/ux.svg',
-    'assets/main-menu/tiger.svg',
-    'assets/main-menu/logos.svg',
-    'assets/main-menu/eyes.svg',
-    'assets/main-menu/me.svg'
+
+  const svgUrls = [
+    '/assets/main-menu/swirl.svg',
+    '/assets/main-menu/ux.svg',
+    '/assets/main-menu/tiger.svg',
+    '/assets/main-menu/logos.svg',
+    '/assets/main-menu/eyes.svg',
+    '/assets/main-menu/me.svg'
   ];
 
-  const mySvg = await Assets.load({
-    src: svgFilePath[0],
-    data: {
-      parseAsGraphicsContext: true,
-    }
-  });
+  const graphics = [];
 
-  const svgGraphics = new Graphics(mySvg);
+  for (const url of svgUrls) {
+    const svg = await Assets.load({
+      src: url,
+      data: {
+        parseAsGraphicsContext: true,
+      },
+    });
 
-  // line it up as this svg is not centered
-  const svgBounds = svgGraphics.getLocalBounds();
+    const graphic = new Graphics(svg);
 
-  svgGraphics.pivot.set((svgBounds.x + svgBounds.width) / 2, (svgBounds.y + svgBounds.height) / 2);
+    const bounds = graphic.getLocalBounds();
+    graphic.pivot.set((bounds.x + bounds.width) / 2, (bounds.y + bounds.height) / 2);
+    graphic.position.set(app.screen.width / 2, app.screen.height / 2);
 
-  svgGraphics.position.set(app.screen.width / 2, app.screen.height / 2);
 
-  app.stage.addChild(svgGraphics);
+    app.stage.addChild(graphic);
+    graphics.push(graphic);
 
-  app.ticker.add((time) => {
-    svgGraphics.rotation += 0.01;
-    svgGraphics.scale.set(2 + Math.sin(svgGraphics.rotation));
-  });
+  }
+
+
 })();
